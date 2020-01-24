@@ -39,20 +39,20 @@ Telegram configuration
 ==================================
 
 ### How to register a bot
-1) Open your Telegram Client or Telegram Web and talk to `@BotFather`.
-2) Type `/start` then type or select `/newbot`
-3) Follow the bot instructions. Usually you only need to specify a bot name and username.
-4) Copy the bot token and **keep it safe**. Do not post it anywhere and make sure it doesn't appear in a debug log that you want to show someone!
+1. Open your Telegram Client or Telegram Web and talk to `@BotFather`.
+2. Type `/start` then type or select `/newbot`
+3. Follow the bot instructions. Usually you only need to specify a bot name and username.
+4. Copy the bot token and **keep it safe**. Do not post it anywhere and make sure it doesn't appear in a debug log that you want to show someone!
 
 ### How to get the chat ID
-1) Add bot to some channel
-2) Send a message containing @botname to this channel
-3) Access the link https://api.telegram.org/botXXX:YYYY/getUpdates (replace XXX:YYYY with your bot token)
+1. Add bot to some channel
+2. Send a message containing @botname to this channel
+3. Access the link https://api.telegram.org/botXXX:YYYY/getUpdates (replace XXX:YYYY with your bot token)
 
 ### Another way to get the chat ID
-1) Sign in to Telegram Web at https://web.telegram.org/
-2) Click on the chat in the left pane
-3) You can get the chat ID in the URL
+1. Sign in to Telegram Web at https://web.telegram.org/
+2. Click on the chat in the left pane
+3. You can get the chat ID in the URL
 
 
 Testing alerts
