@@ -1,0 +1,16 @@
+{% if alert['status'] == 'firing' -%}
+*🔥 FIRING 🔥*
+{% elif alert['status'] == 'resolved' -%}
+*✅ RESOLVED ✅*
+{% else -%}
+*[{{ alert['labels']['severity']|upper }}] {{ alert['status']|upper }}*
+{% endif -%}
+
+*{{ alert['labels']['alertname'] }}*
+{{ alert['annotations']['message']|default('') }}
+
+{{ alert['annotations']['description'] -}}
+
+{% if alert['startsAt'] is defined %}*Started at:* {{ alert['startsAt'] }}{%- endif %}
+{% if alert['endsAt'] is defined %}*Ended at:* {{ alert['endsAt'] }}{%- endif %}
+{% if duration is defined %}*Duration*: {{ duration }}{%- endif %}
