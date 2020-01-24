@@ -20,7 +20,10 @@ COPY --from=builder /install /usr/local
 ENV PYTHONUNBUFFERED=1 \
 	BOT_TOKEN="" \
 	CHAT_ID="" \
-	LOG_LEVEL="INFO"
+	LOG_LEVEL="INFO" \
+	FORCE_BASIC_AUTH="False" \
+	BASIC_AUTH_USERNAME="" \
+	BASIC_AUTH_PASSWORD=""
 
 WORKDIR /alertmanager-webhook-telegram
 COPY flaskAlert.py .
