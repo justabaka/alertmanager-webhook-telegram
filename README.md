@@ -38,6 +38,10 @@ Alertmanager configuration example
                         username: 'username'
                         password: 'password'
 
+It is possible to route alerts to different chats and users, not only a sinble predefined one. This is easily done using query string arguments (e.g. 'http://hostname:8080/?chat_id=-12345').
+
+Please also check the telegram configuration section on how to send messages to individual users.
+
 Telegram configuration
 ==================================
 
@@ -57,6 +61,10 @@ Telegram configuration
 2. Click on the chat in the left pane
 3. You can get the chat ID in the URL
 
+### Sending alerts to a @username
+In order to send alerts an individual user you must obtain the Telegram user ID via https://t.me/userinfobot or a similar service. You may supply the ID as a regular chat id. Sending directly to @username is not supported yet.
+
+Please also note that the user needs to send any message to the bot first.
 
 Testing alerts
 ===============
