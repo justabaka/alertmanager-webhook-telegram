@@ -50,26 +50,27 @@ else:
 @app.route('/', methods=['POST'])
 def post_alertmanager():
     """ Processes a webhook POST request with a JSON paylod, renders a message using a template and sends it via Telegram """
-    app.logger.debug("Received a request: %s" % pformat(request.get_data()))
+    app.logger.debug("Received a request: {}".format(pformat(request.get_data())))
 
     try:
         content = json.loads(request.get_data())
     except Exception as exc:
-        app.logger.error("Cannot parse JSON data: %s.\nError message: %s" % (pformat(request.get_data()), str(exc)))
-        app.bot.sendMessage(chat_id=app.chat_id, text="Cannot parse JSON data: %s.\nError message: %s" % (request.get_data(), str(exc)))
+        app.logger.error("Cannot parse JSON data: {}.\nError message: {}".format(pformat(request.get_data()), str(exc)))
+        app.bot.sendMessage(chat_id=app.chat_id, text="Cannot parse JSON data: {}.\nError message: {}".format(pformat(request.get_data()), str(exc)))
+        return "Alert FAIL", 500
 
     try:
         for alert in content['alerts']:
             timediff = parse(alert['endsAt']) - parse(alert['startsAt'])
 
             message = render_template("alert.j2", alert=alert, duration=timediff)
-            app.logger.debug('Rendered a message: %s' % pformat(message))
+            app.logger.debug('Rendered the message: {}'.format(pformat(message)))
 
             app.bot.sendMessage(chat_id=app.chat_id, text=message, parse_mode=telegram.ParseMode.MARKDOWN)
             return "Alert OK", 200
     except Exception as exc:
-        app.logger.debug("Cannot send a message: %s" % pformat(exc))
-        app.bot.sendMessage(chat_id=app.chat_id, text="Cannot send a message: %s" % str(exc))
+        app.logger.debug("Cannot send the message: {}".format(pformat(str(exc))))
+        app.bot.sendMessage(chat_id=app.chat_id, text="Cannot send the message: {}".format(pformat(str(exc))))
         return "Alert FAIL", 500
 
 
