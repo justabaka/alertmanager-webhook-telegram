@@ -36,6 +36,8 @@ config:
 
   basic_auth:
     enabled: true
+    
+    # Required when basic_auth.enable is set to true
     username: admin
     password: password
 
