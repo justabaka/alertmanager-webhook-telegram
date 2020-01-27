@@ -38,7 +38,7 @@ Alertmanager configuration example
                         username: 'username'
                         password: 'password'
 
-It is possible to route alerts to different chats and users, not only a sinble predefined one. This is easily done using query string arguments (e.g. 'http://hostname:8080/?chat_id=-12345').
+It is possible to route alerts to different chats and users, not only a single predefined one. This can be easily done using query string arguments (e.g. 'http://hostname:8080/?chat_id=-12345').
 
 Please also check the telegram configuration section on how to send messages to individual users.
 
