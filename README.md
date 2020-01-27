@@ -2,7 +2,7 @@
 This is a Flask (Python) implementation.
 
 ## Running in Docker
-  All the configuration is done using environment variables. Basic Authentication is disabled by default, the default loglevel is INFO. There are only two required environment variables: BOT_TOKEN and CHAT_ID. 
+All the configuration is done using environment variables. Basic Authentication is disabled by default, the default loglevel is INFO. There are only two required environment variables: BOT_TOKEN and CHAT_ID. 
   
   Here's an example with every environment variable possible:
 
@@ -15,12 +15,15 @@ This is a Flask (Python) implementation.
     	-e "BASIC_AUTH_PASSWORD=<password>" \
     	-p 8080:8080 justabaka/alertmanager-webhook-telegram:latest
 
+## Building a Docker Image 
+* `docker build -t alertmanager-webhook-telegram .`
+
 ## Manual installation and running
 * `pip install -r requirements.txt`
 * `python flaskalert.py`
 
-## Building a Docker Image 
-* `docker build -t alertmanager-webhook-telegram .`
+## Message template customization
+Currently it can only be done by editing the `templates/alert.j2` Jinja2 template.
 
 Alertmanager configuration example
 ==================================
