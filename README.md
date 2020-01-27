@@ -1,14 +1,24 @@
 # Alertmanager Webhook for Telegram
 This is a Flask (Python) implementation.
 
+## Running in Kubernetes
+### Template && kubectl apply:
+1. Edit values.yaml and set up everything in the 'config' section.
+2. Run `helm template . -f values.yaml | kubectl apply -f -`.
+
+If you know how to use Helm's `--set` arguments, you may use that instead of editing values.yaml as well.
+
+### Helm chart-based installation
+Wasn't tested yet.
+
 ## Running in Docker
 All the configuration is done using environment variables. Basic Authentication is disabled by default, the default loglevel is INFO. There are only two required environment variables: BOT_TOKEN and CHAT_ID. 
   
   Here's an example with every environment variable possible:
 
     docker run -d --name alertmanager-webhook-telegram \
-    	-e "BOT_TOKEN=telegramBotToken" \
-    	-e "CHAT_ID=telegramChatID" \
+    	-e "BOT_TOKEN=XXXXX:YYYYYYYY" \
+    	-e "CHAT_ID=-1234567" \
     	-e "FORCE_BASIC_AUTH=True" \
     	-e "LOG_LEVEL=INFO" \
     	-e "BASIC_AUTH_USERNAME=<username>" \
@@ -38,7 +48,7 @@ Alertmanager configuration example
                         username: 'username'
                         password: 'password'
 
-It is possible to route alerts to different chats and users, not only a single predefined one. This can be easily done using query string arguments (e.g. 'http://hostname:8080/?chat_id=-12345').
+It is possible to route alerts to different chats and users, not only a single predefined one. This can be easily done using query string arguments (e.g. 'http://hostname:8080/?chat_id=-1234567').
 
 Please also check the telegram configuration section on how to send messages to individual users.
 
