@@ -48,7 +48,11 @@ else:
 
 @app.route('/', methods=['POST'])
 def post_alertmanager():
-    """ Processes a webhook POST request with a JSON paylod, renders a message using a template and sends it via Telegram """
+    """
+    Processes a webhook POST request with a JSON paylod, renders a message using a template and sends it via Telegram.
+    You can supply a 'CHAT_ID' environment variable that will be used by default and/or a 'chat_id' query string argument
+    to override the default behaviour and achieve dynamic alert routing.
+    """
     app.logger.debug("Received a request: {}".format(pformat(request.get_data())))
 
     if 'chat_id' in request.args:
@@ -57,6 +61,8 @@ def post_alertmanager():
     else:
         app.logger.debug("CHAT_ID wasn't supplied in the request query string, switching to environment variables")
         chat_id = get_env_var('CHAT_ID', required=True)
+
+    app.logger.debug('Using chat_id={}'.format(chat_id))
 
     try:
         content = json.loads(request.get_data())
