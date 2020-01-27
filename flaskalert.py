@@ -33,7 +33,6 @@ def get_env_var(env_variable_name='', default='', required=False):
 
 
 app.bot = telegram.Bot(token=get_env_var('BOT_TOKEN', required=True))
-app.chat_id = get_env_var('CHAT_ID', required=True)
 app.use_basic_auth = get_env_var('FORCE_BASIC_AUTH', default='no', required=False)
 
 if app.use_basic_auth.lower() in ['1', 't', 'true', 'yes', 'on']:
@@ -52,11 +51,18 @@ def post_alertmanager():
     """ Processes a webhook POST request with a JSON paylod, renders a message using a template and sends it via Telegram """
     app.logger.debug("Received a request: {}".format(pformat(request.get_data())))
 
+    if 'chat_id' in request.args:
+        chat_id = request.args.get('chat_id')
+        app.logger.debug("Using CHAT_ID from the request query string arguments")
+    else:
+        app.logger.debug("CHAT_ID wasn't supplied in the request query string, switching to environment variables")
+        chat_id = get_env_var('CHAT_ID', required=True)
+
     try:
         content = json.loads(request.get_data())
     except Exception as exc:
         app.logger.error("Cannot parse JSON data: {}.\nError message: {}".format(pformat(request.get_data()), str(exc)))
-        app.bot.sendMessage(chat_id=app.chat_id, text="Cannot parse JSON data: {}.\nError message: {}".format(pformat(request.get_data()), str(exc)))
+        app.bot.sendMessage(chat_id=chat_id, text="Cannot parse JSON data: {}.\nError message: {}".format(pformat(request.get_data()), str(exc)))
         return "Alert FAIL", 500
 
     try:
@@ -66,11 +72,11 @@ def post_alertmanager():
             message = render_template("alert.j2", alert=alert, duration=timediff)
             app.logger.debug('Rendered the message: {}'.format(pformat(message)))
 
-            app.bot.sendMessage(chat_id=app.chat_id, text=message, parse_mode=telegram.ParseMode.MARKDOWN)
+            app.bot.sendMessage(chat_id=chat_id, text=message, parse_mode=telegram.ParseMode.MARKDOWN)
             return "Alert OK", 200
     except Exception as exc:
         app.logger.debug("Cannot send the message: {}".format(pformat(str(exc))))
-        app.bot.sendMessage(chat_id=app.chat_id, text="Cannot send the message: {}".format(pformat(str(exc))))
+        app.bot.sendMessage(chat_id=chat_id, text="Cannot send the message: {}".format(pformat(str(exc))))
         return "Alert FAIL", 500
 
 
