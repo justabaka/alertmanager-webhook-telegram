@@ -55,6 +55,7 @@ def post_alertmanager():
     """
     app.logger.debug("Received a request: {}".format(pformat(request.get_data())))
 
+    # TODO: Implement @username support https://stackoverflow.com/a/31081941
     if 'chat_id' in request.args:
         chat_id = request.args.get('chat_id')
         app.logger.debug("Using CHAT_ID from the request query string arguments")
