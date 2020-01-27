@@ -16,7 +16,7 @@ from flask import render_template
 from flask import current_app as app
 from flask_basicauth import BasicAuth
 
-LOG_LEVEL = logging.getLevelName(os.getenv('LOG_LEVEL', 'INFO'))
+LOG_LEVEL = logging.getLevelName(os.getenv('LOG_LEVEL', default='INFO').upper())
 logging.basicConfig(level=LOG_LEVEL)
 
 app = Flask(__name__)
@@ -85,6 +85,13 @@ def post_alertmanager():
         app.logger.debug("Cannot send the message: {}".format(pformat(str(exc))))
         app.bot.sendMessage(chat_id=chat_id, text="Cannot send the message: {}".format(pformat(str(exc))))
         return "Alert FAIL", 500
+
+
+@app.route('/health', methods=['GET'])
+@app.route('/healthz', methods=['GET'])
+def healthcheck():
+    """ Naive health check that works more like a liveness probe """
+    return "OK", 200
 
 
 if __name__ == '__main__':
