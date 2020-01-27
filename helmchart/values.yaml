@@ -38,8 +38,8 @@ config:
     enabled: true
     
     # Required when basic_auth.enable is set to true
-    username: admin
-    password: password
+    username: 
+    password: 
 
 resources: {}
 nodeSelector: {}

@@ -43,10 +43,6 @@ spec:
             {{- with .Values.config.basic_auth.enabled }}
             - name: FORCE_BASIC_AUTH
               value: "{{ $.Values.config.basic_auth.enabled }}"
-            - name: BASIC_AUTH_PASSWORD
-              value: "{{ $.Values.config.basic_auth.password }}"
-            - name: BASIC_AUTH_USERNAME
-              value: "{{ $.Values.config.basic_auth.username }}"
             {{- end }}
           envFrom:
           - secretRef:
