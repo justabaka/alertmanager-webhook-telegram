@@ -34,7 +34,7 @@ spec:
           env:
             {{- with .Values.config.telegram.chat_id }}
             - name: CHAT_ID
-              value: "{{ $.Values.config.telegram.chat_id }}"
+              value: {{ $.Values.config.telegram.chat_id }}
             {{- end }}
             {{- with .Values.config.log_level }}
             - name: LOG_LEVEL
@@ -48,6 +48,9 @@ spec:
             - name: BASIC_AUTH_USERNAME
               value: "{{ $.Values.config.basic_auth.username }}"
             {{- end }}
+          envFrom:
+          - secretRef:
+              name: "{{ include "alertmanager-webhook-telegram.fullname" . }}-token"
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       {{- with .Values.nodeSelector }}
