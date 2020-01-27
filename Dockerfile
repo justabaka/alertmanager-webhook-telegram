@@ -26,10 +26,10 @@ ENV PYTHONUNBUFFERED=1 \
 	BASIC_AUTH_PASSWORD=""
 
 WORKDIR /alertmanager-webhook-telegram
-COPY flaskAlert.py .
+COPY flaskalert.py .
 COPY templates/* templates/
 
 EXPOSE 8080
 USER nobody
 
-ENTRYPOINT ["/usr/local/bin/gunicorn", "-w", "4", "-b", "0.0.0.0:8080", "flaskAlert:app"]
+ENTRYPOINT ["/usr/local/bin/gunicorn", "-w", "4", "-b", "0.0.0.0:8080", "flaskalert:app"]

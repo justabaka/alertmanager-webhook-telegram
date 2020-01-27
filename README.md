@@ -17,7 +17,7 @@ This is a Flask (Python) implementation.
 
 ## Manual installation and running
 * `pip install -r requirements.txt`
-* `python flaskAlert.py`
+* `python flaskalert.py`
 
 ## Building a Docker Image 
 * `docker build -t alertmanager-webhook-telegram .`
