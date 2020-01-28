@@ -74,7 +74,10 @@ def post_alertmanager():
 
     try:
         for alert in content['alerts']:
-            timediff = parse(alert['endsAt']) - parse(alert['startsAt'])
+            if alert['status'] == 'resolved':
+                timediff = parse(alert['endsAt']) - parse(alert['startsAt'])
+            else:
+                timediff = None
 
             message = render_template("alert.j2", alert=alert, duration=timediff)
             app.logger.debug('Rendered the message: {}'.format(pformat(message)))

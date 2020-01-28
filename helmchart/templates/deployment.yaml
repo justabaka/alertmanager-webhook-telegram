@@ -1,9 +1,10 @@
+{{- $fullName := include "alertmanager-webhook-telegram.fullname" . -}}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "alertmanager-webhook-telegram.fullname" . }}
+  name: {{ $fullName }}
   labels:
-    app.kubernetes.io/name: {{ include "alertmanager-webhook-telegram.name" . }}
+    app.kubernetes.io/name: {{ $fullName }}
     helm.sh/chart: {{ include "alertmanager-webhook-telegram.chart" . }}
     app.kubernetes.io/instance: {{ .Release.Name }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
@@ -11,12 +12,12 @@ spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      app.kubernetes.io/name: {{ include "alertmanager-webhook-telegram.name" . }}
+      app.kubernetes.io/name: {{ $fullName }}
       app.kubernetes.io/instance: {{ .Release.Name }}
   template:
     metadata:
       labels:
-        app.kubernetes.io/name: {{ include "alertmanager-webhook-telegram.name" . }}
+        app.kubernetes.io/name: {{ $fullName }}
         app.kubernetes.io/instance: {{ .Release.Name }}
     spec:
       containers:
@@ -46,9 +47,20 @@ spec:
             {{- end }}
           envFrom:
           - secretRef:
-              name: "{{ include "alertmanager-webhook-telegram.fullname" . }}-token"
+              name: "{{ $fullName }}-token"
+          {{- with .Values.template_files }}
+          volumeMounts:
+          - name: "{{ $fullName }}-config"
+            mountPath: /alertmanager-webhook-telegram/templates
+          {{- end }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
+      {{- with .Values.template_files }}
+      volumes:
+      - name: "{{ $fullName }}-config"
+        configMap:
+          name: "{{ $fullName }}-config"
+      {{- end }}      
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

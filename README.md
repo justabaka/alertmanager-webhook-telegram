@@ -4,7 +4,7 @@ This is a Flask (Python) implementation.
 ## Running in Kubernetes
 ### Template && kubectl apply:
 1. Edit values.yaml and set up everything in the 'config' section.
-2. Run `helm template . -f values.yaml | kubectl apply -f -`.
+2. Run `helm template . -f values.yaml | kubectl apply -f -`
 
 If you know how to use Helm's `--set` arguments, you may use that instead of editing values.yaml as well.
 
@@ -33,7 +33,12 @@ All the configuration is done using environment variables. Basic Authentication 
 * `python flaskalert.py`
 
 ## Message template customization
-Currently it can only be done by editing the `templates/alert.j2` Jinja2 template.
+Kubernetes/Helm installation: edit template in the 'template_files' section of values.yaml and re-deploy the application.
+Instead of editing the values.yaml you can simply supply a file to override or add contents during the render phase: `helm template . -f values.yaml --set-file template_files.alert\\.j2=custom_template.j2` . Note the dot escaping.
+
+Docker installation: copy the same file from the git repository and mount it back to /alertmanager-webhook-telegram/templates (it's usually better to mount a directory).
+
+Manual installation: simply edit `templates/alert.j2` Jinja2 template.
 
 Alertmanager configuration example
 ==================================

@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "alertmanager-webhook-telegram.fullname" . }}-config
+  labels:
+    app.kubernetes.io/name: {{ include "alertmanager-webhook-telegram.name" . }}
+    helm.sh/chart: {{ include "alertmanager-webhook-telegram.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+data:
+  {{- range $key, $value := .Values.template_files }}
+  {{ $key }}: |-
+    {{- $value | nindent 4 }}
+  {{ end }}    
