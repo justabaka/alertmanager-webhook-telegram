@@ -4,9 +4,9 @@ This is a Flask (Python) implementation.
 ## Running in Kubernetes
 ### Template && kubectl apply:
 1. Edit values.yaml and set up everything in the 'config' section.
-2. Run `helm template . -f values.yaml | kubectl apply -f -`
+2. Run `helm template . -f values.yaml | kubectl apply -n monitoring -f -`
 
-If you know how to use Helm's `--set` arguments, you may use that instead of editing values.yaml as well.
+If you know how to use Helm's `--set` arguments, you may use that instead of editing values.yaml: `helm template . -f values.yaml --set config.telegram.bot_token="XXXXX:YYYYYYYY",config.telegram.chat_id=\"-1234567\",config.basic_auth.enabled=false | kubectl apply -n monitoring -f -`
 
 ### Helm chart-based installation
 Wasn't tested yet.
