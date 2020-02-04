@@ -37,9 +37,9 @@ spec:
             - name: CHAT_ID
               value: {{ $.Values.config.telegram.chat_id }}
             {{- end }}
-            {{- with .Values.config.telegram.date_time_format }}
+            {{- with .Values.config.date_time_format }}
             - name: DATE_TIME_FORMAT
-              value: {{ $.Values.config.telegram.date_time_format }}
+              value: "{{ $.Values.config.date_time_format }}"
             {{- end }}
             {{- with .Values.config.log_level }}
             - name: LOG_LEVEL
