@@ -16,7 +16,7 @@ from flask import render_template
 from flask import current_app as app
 from flask_basicauth import BasicAuth
 
-LOG_LEVEL = logging.getLevelName(os.getenv('LOG_LEVEL', default='INFO').upper())
+LOG_LEVEL = logging.getLevelName(os.getenv('LOG_LEVEL', 'INFO').upper())
 logging.basicConfig(level=LOG_LEVEL)
 
 app = Flask(__name__)
@@ -34,6 +34,7 @@ def get_env_var(env_variable_name='', default='', required=False):
 
 app.bot = telegram.Bot(token=get_env_var('BOT_TOKEN', required=True))
 app.use_basic_auth = get_env_var('FORCE_BASIC_AUTH', default='no', required=False)
+app.time_format = get_env_var('DATE_TIME_FORMAT', default='%H-%M-%S %a %d-%m-%Y')
 
 if app.use_basic_auth.lower() in ['1', 't', 'true', 'yes', 'on']:
     app.config['BASIC_AUTH_FORCE'] = True
@@ -74,10 +75,17 @@ def post_alertmanager():
 
     try:
         for alert in content['alerts']:
+            alert['startsAt'] = parse(alert['startsAt'])
+
             if alert['status'] == 'resolved':
-                timediff = parse(alert['endsAt']) - parse(alert['startsAt'])
+                alert['endsAt'] = parse(alert['endsAt'])
+                timediff = alert['endsAt'] - alert['startsAt']
+
+                alert['endsAt'] = alert['endsAt'].strftime(app.time_format)
             else:
                 timediff = None
+
+            alert['startsAt'] = alert['startsAt'].strftime(app.time_format)
 
             message = render_template("alert.j2", alert=alert, duration=timediff)
             app.logger.debug('Rendered the message: {}'.format(pformat(message)))

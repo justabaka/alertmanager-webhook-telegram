@@ -50,6 +50,7 @@ template_files:
 
 config:
   log_level: INFO
+  date_time_format: '%H-%M-%S %a %d-%m-%Y' # Python strftime() format string: https://docs.python.org/3/library/datetime.html#strftime-and-strptime-format-codes
 
   telegram:
     bot_token: # Required

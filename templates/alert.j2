@@ -11,8 +11,8 @@
 
 {{ alert['annotations']['description'] -}}
 
-{% if alert['startsAt'] is defined %}*Started at:* {{ alert['startsAt'] }}{% endif %}
+{% if alert['startsAt'] is defined %}*Occurred at:* {{ alert['startsAt'] }}{% endif %}
 {% if alert['status'] == 'resolved' -%}
-  {%- if alert['endsAt'] is defined -%}*Ended at:* {{ alert['endsAt'] }}{%- endif %}
-  {%- if duration is defined %}*Duration*: {{ duration }}{%- endif %}
+{% if alert['endsAt'] is defined %}*Resolved at:* {{ alert['endsAt'] }}{%- endif %}
+{% if duration is defined %}*Duration*: {{ duration }}{%- endif %}
 {% endif -%}
