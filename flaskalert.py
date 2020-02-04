@@ -34,7 +34,7 @@ def get_env_var(env_variable_name='', default='', required=False):
 
 app.bot = telegram.Bot(token=get_env_var('BOT_TOKEN', required=True))
 app.use_basic_auth = get_env_var('FORCE_BASIC_AUTH', default='no', required=False)
-app.time_format = get_env_var('DATE_TIME_FORMAT', default='%H-%M-%S %a %d-%m-%Y')
+app.time_format = get_env_var('DATE_TIME_FORMAT', default='%H:%M:%S %a %d.%m.%Y')
 
 if app.use_basic_auth.lower() in ['1', 't', 'true', 'yes', 'on']:
     app.config['BASIC_AUTH_FORCE'] = True
