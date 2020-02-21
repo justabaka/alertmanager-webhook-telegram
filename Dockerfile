@@ -1,5 +1,5 @@
 FROM python:3.7-alpine3.11 AS base
-LABEL maintainer "Just a baka <justabaka@gmail.com>"
+LABEL maintainer="Just a baka <justabaka@gmail.com>"
 
 # Build dependencies
 FROM base as builder
