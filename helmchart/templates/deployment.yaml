@@ -35,7 +35,7 @@ spec:
           env:
             {{- with .Values.config.telegram.chat_id }}
             - name: CHAT_ID
-              value: {{ $.Values.config.telegram.chat_id }}
+              value: "{{ $.Values.config.telegram.chat_id }}"
             {{- end }}
             {{- with .Values.config.date_time_format }}
             - name: DATE_TIME_FORMAT
