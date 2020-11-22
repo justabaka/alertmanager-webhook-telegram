@@ -17,7 +17,7 @@ from flask import current_app as app
 from flask_basicauth import BasicAuth
 
 LOG_LEVEL = logging.getLevelName(os.getenv('LOG_LEVEL', 'INFO').upper())
-logging.basicConfig(level=LOG_LEVEL)
+logging.basicConfig(level=LOG_LEVEL, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 
 app = Flask(__name__)
 app.secret_key = 'aYT>.L$kk2h>!'
@@ -69,8 +69,7 @@ def post_alertmanager():
     try:
         content = json.loads(request.get_data())
     except Exception as exc:
-        app.logger.error("Cannot parse JSON data: {}.\nError message: {}".format(pformat(request.get_data()), str(exc)))
-        app.bot.sendMessage(chat_id=chat_id, text="Cannot parse JSON data: {}.\nError message: {}".format(pformat(request.get_data()), str(exc)))
+        app.logger.error("Cannot parse JSON data: {}.\n  Error message: {}".format(pformat(request.get_data()), str(exc)))
         return "Alert FAIL", 500
 
     try:
@@ -93,8 +92,7 @@ def post_alertmanager():
             app.bot.sendMessage(chat_id=chat_id, text=message, parse_mode=telegram.ParseMode.MARKDOWN)
             return "Alert OK", 200
     except Exception as exc:
-        app.logger.debug("Cannot send the message: {}".format(pformat(str(exc))))
-        app.bot.sendMessage(chat_id=chat_id, text="Cannot send the message: {}".format(pformat(str(exc))))
+        app.logger.error("Cannot send the message:\n  chat_id={}\n  message={}".format(chat_id, pformat(str(exc))))
         return "Alert FAIL", 500
 
 
