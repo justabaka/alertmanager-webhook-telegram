@@ -15,6 +15,7 @@ from flask import request
 from flask import render_template
 from flask import current_app as app
 from flask_basicauth import BasicAuth
+from jinja2.runtime import Undefined
 
 LOG_LEVEL = logging.getLevelName(os.getenv('LOG_LEVEL', 'INFO').upper())
 logging.basicConfig(level=LOG_LEVEL, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
@@ -47,6 +48,17 @@ else:
     app.logger.info('Basic Auth is disabled')
 
 
+@app.template_filter()
+def escape_telegram_markdown(item):
+    """
+    Escapes characters in text as Telegram Bot API requires.
+    Info:
+      * https://core.telegram.org/bots/api#markdownv2-style
+      * https://python-telegram-bot.readthedocs.io/en/stable/telegram.utils.helpers.html#telegram.utils.helpers.escape_markdown
+    """
+    return telegram.utils.helpers.escape_markdown(text=str(item), version=2)
+
+
 @app.route('/', methods=['POST'])
 def post_alertmanager():
     """
@@ -69,7 +81,7 @@ def post_alertmanager():
     try:
         content = json.loads(request.get_data())
     except Exception as exc:
-        app.logger.error("Cannot parse JSON data: {}.\n  Error message: {}".format(pformat(request.get_data()), str(exc)))
+        app.logger.error("Cannot parse JSON data: {}.\n  Error message: {}".format(pformat(request.get_data()), pformat(str(exc))))
         return "Alert FAIL", 500
 
     try:
@@ -85,12 +97,20 @@ def post_alertmanager():
                 timediff = None
 
             alert['startsAt'] = alert['startsAt'].strftime(app.time_format)
+    except Exception as exc:
+        app.logger.error("Cannot parse date/time in the message:\n message={}".format(pformat(str(exc))), pformat(alert))
+        return "Alert FAIL", 500
 
-            message = render_template("alert.j2", alert=alert, duration=timediff)
-            app.logger.debug('Rendered the message: {}'.format(pformat(message)))
+    try:
+        message = render_template("alert.j2", alert=alert, duration=timediff)
+        app.logger.debug('Rendered the message: {}'.format(pformat(message)))
+    except Exception as exc:
+        app.logger.error("Cannot render a message:\n message={}\n".format(pformat(alert), pformat(str(exc))))
+        return "Alert FAIL", 500
 
-            app.bot.sendMessage(chat_id=chat_id, text=message, parse_mode=telegram.ParseMode.MARKDOWN)
-            return "Alert OK", 200
+    try:
+        app.bot.sendMessage(chat_id=chat_id, text=message, parse_mode=telegram.ParseMode.MARKDOWN_V2)
+        return "Alert OK", 200
     except Exception as exc:
         app.logger.error("Cannot send the message:\n  chat_id={}\n  message={}".format(chat_id, pformat(str(exc))))
         return "Alert FAIL", 500

@@ -3,16 +3,16 @@
 {% elif alert['status'] == 'resolved' -%}
 *✅ RESOLVED ✅*
 {% else -%}
-*[{{ alert['labels']['severity']|upper }}] {{ alert['status']|upper }}*
+*[{{ alert['labels']['severity']|upper|escape_telegram_markdown }}] {{ alert['status']|upper|escape_telegram_markdown }}*
 {% endif -%}
 
-*{{ alert['labels']['alertname'] }}*
-{{ alert['annotations']['message']|default('') }}
+*{{ alert['labels']['alertname']|escape_telegram_markdown }}*
+{{ alert['annotations']['message']|default('')|escape_telegram_markdown }}
 
-{{ alert['annotations']['description'] -}}
+{{ alert['annotations']['description']|escape_telegram_markdown -}}
 
-{% if alert['startsAt'] is defined %}*Occurred at:* {{ alert['startsAt'] }}{% endif %}
+{% if alert['startsAt'] is defined %}*Occurred at:* {{ alert['startsAt']|escape_telegram_markdown }}{% endif %}
 {% if alert['status'] == 'resolved' -%}
-{% if alert['endsAt'] is defined %}*Resolved at:* {{ alert['endsAt'] }}{%- endif %}
-{% if duration is defined %}*Duration*: {{ duration }}{%- endif %}
+{% if alert['endsAt'] is defined %}*Resolved at:* {{ alert['endsAt']|escape_telegram_markdown }}{%- endif %}
+{% if duration is defined %}*Duration*: {{ duration|escape_telegram_markdown }}{%- endif %}
 {% endif -%}
