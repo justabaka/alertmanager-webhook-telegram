@@ -27,26 +27,27 @@ ingress:
 
   tls: []
 
-template_files:
-  alert.j2: |
-    {% if alert['status'] == 'firing' -%}
-    *🔥 FIRING 🔥*
-    {% elif alert['status'] == 'resolved' -%}
-    *✅ RESOLVED ✅*
-    {% else -%}
-    *[{{ alert['labels']['severity']|upper }}] {{ alert['status']|upper }}*
-    {% endif -%}
+# Uncomment to use a custom template
+# template_files:
+#   alert.j2: |
+#     {% if alert['status'] == 'firing' -%}
+#     *🔥 FIRING 🔥*
+#     {% elif alert['status'] == 'resolved' -%}
+#     *✅ RESOLVED ✅*
+#     {% else -%}
+#     *[{{ alert['labels']['severity']|upper }}] {{ alert['status']|upper }}*
+#     {% endif -%}
 
-    *{{ alert['labels']['alertname'] }}*
-    {{ alert['annotations']['message']|default('') }}
+#     *{{ alert['labels']['alertname'] }}*
+#     {{ alert['annotations']['message']|default('') }}
 
-    {{ alert['annotations']['description'] -}}
+#     {{ alert['annotations']['description'] -}}
 
-    {% if alert['startsAt'] is defined %}*Occurred at:* {{ alert['startsAt'] }}{% endif %}
-    {% if alert['status'] == 'resolved' -%}
-    {% if alert['endsAt'] is defined %}*Resolved at:* {{ alert['endsAt'] }}{%- endif %}
-    {% if duration is defined %}*Duration*: {{ duration }}{%- endif %}
-    {% endif -%}
+#     {% if alert['startsAt'] is defined %}*Occurred at:* {{ alert['startsAt'] }}{% endif %}
+#     {% if alert['status'] == 'resolved' -%}
+#     {% if alert['endsAt'] is defined %}*Resolved at:* {{ alert['endsAt'] }}{%- endif %}
+#     {% if duration is defined %}*Duration*: {{ duration }}{%- endif %}
+#     {% endif -%}
 
 config:
   log_level: INFO
